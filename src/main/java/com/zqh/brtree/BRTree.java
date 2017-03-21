@@ -315,11 +315,75 @@ public class BRTree {
         l.setParent(p);
         if (null == p) {
             this.root = l;
-        }
-        if (node == p.getLeft()) {
-            p.setLeft(l);
         } else {
-            p.setRight(l);
+            if (node == p.getLeft()) {
+                p.setLeft(l);
+            } else {
+                p.setRight(l);
+            }
+        }
+    }
+
+    /**
+     * 获取以给定节点为根节点的树的深度
+     * @param node
+     * @return
+     */
+    public static int getDepth(Node node) {
+        if (null == node) {
+            return 0;
+        }
+        int rightDepth = 1 + getDepth(node.getRight());
+        int leftDepth = 1 + getDepth(node.getLeft());
+        return rightDepth > leftDepth ? rightDepth : leftDepth;
+    }
+
+    /**
+     *
+     * @param root 根节点
+     * @param totalDepth 二叉树层数
+     * @param parentDepthNum 父节点所在层数
+     * @param parentX 父节点水平下标
+     * @param node 当前节点
+     * @param depthNodesArray 存放二叉树节点的二维数组
+     */
+    public static void printTree(Node root, int totalDepth, int parentDepthNum, int parentX, Node node, Node[][] depthNodesArray) {
+        if (null == node) {
+            return;
+        }
+        int x; // 水平下标
+        int y; // 垂直下标
+        if (node == root) {
+            parentDepthNum = 0;
+            depthNodesArray = new Node[totalDepth][(1<<totalDepth) - 1];
+            x = (1 << (totalDepth - 1)) - 1;
+        } else {
+            // 知道第i层某个节点在水平一维数组中的下标x后，
+            // 我们可知其左子节点的下标为x-2^(n-i-1)，
+            // 右子节点的下标为x+2^(n-i-1)
+            if (node == node.getParent().getLeft()) {
+                x = parentX - (1<<(totalDepth - parentDepthNum - 1));
+            } else {
+                x = parentX + (1<<(totalDepth - parentDepthNum - 1));
+            }
+        }
+        y = parentDepthNum; // 当前节点所在层数减去一
+        depthNodesArray[y][x] = node;
+        // 将左右子节点放入数组
+        printTree(root, totalDepth, parentDepthNum + 1, x, node.getLeft(), depthNodesArray);
+        printTree(root, totalDepth, parentDepthNum + 1, x, node.getRight(), depthNodesArray);
+
+        if (node == root) {
+            for (Node[] depthNodes : depthNodesArray) {
+                for (Node depthNode : depthNodes) {
+                    if (null == depthNode) {
+                        System.out.print("      ");
+                    } else {
+                        System.out.print(depthNode.getValue() + ":" + (depthNode.getColor() ? "red  " : "black"));
+                    }
+                }
+                System.out.println();
+            }
         }
     }
 
