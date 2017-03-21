@@ -23,7 +23,7 @@ public class Main {
             tree.insert(a[i]);
         }
         System.out.println(tree);
-        BRTree.printTree(tree.getRoot(),  BRTree.getDepth(tree.getRoot()), 0, 0, tree.getRoot(), null);
+        BRTree.printTree(true,  BRTree.getDepth(tree.getRoot()), 0, 0, tree.getRoot(), null);
 //        Integer[] b = {21, 57, 45, 83, 33, 54, 49, 38, 89, 61};
         for (int i = 0; i< 10; i++) {
             tree.delete(a[i]);

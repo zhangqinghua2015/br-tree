@@ -340,20 +340,20 @@ public class BRTree {
 
     /**
      *
-     * @param root 根节点
+     * @param isRoot 当前节点是否为根节点
      * @param totalDepth 二叉树层数
-     * @param parentDepthNum 父节点所在层数
+     * @param parentDepthNum 父节点所在层数(根节点为第1层)
      * @param parentX 父节点水平下标
      * @param node 当前节点
      * @param depthNodesArray 存放二叉树节点的二维数组
      */
-    public static void printTree(Node root, int totalDepth, int parentDepthNum, int parentX, Node node, Node[][] depthNodesArray) {
+    public static void printTree(boolean isRoot, int totalDepth, int parentDepthNum, int parentX, Node node, Node[][] depthNodesArray) {
         if (null == node) {
             return;
         }
         int x; // 水平下标
         int y; // 垂直下标
-        if (node == root) {
+        if (isRoot) {
             parentDepthNum = 0;
             depthNodesArray = new Node[totalDepth][(1<<totalDepth) - 1];
             x = (1 << (totalDepth - 1)) - 1;
@@ -370,10 +370,10 @@ public class BRTree {
         y = parentDepthNum; // 当前节点所在层数减去一
         depthNodesArray[y][x] = node;
         // 将左右子节点放入数组
-        printTree(root, totalDepth, parentDepthNum + 1, x, node.getLeft(), depthNodesArray);
-        printTree(root, totalDepth, parentDepthNum + 1, x, node.getRight(), depthNodesArray);
+        printTree(false, totalDepth, parentDepthNum + 1, x, node.getLeft(), depthNodesArray);
+        printTree(false, totalDepth, parentDepthNum + 1, x, node.getRight(), depthNodesArray);
 
-        if (node == root) {
+        if (isRoot) {
             for (Node[] depthNodes : depthNodesArray) {
                 for (Node depthNode : depthNodes) {
                     if (null == depthNode) {
